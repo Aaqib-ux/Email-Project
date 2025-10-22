@@ -1,0 +1,9 @@
+google-auth-oauthlib
+google-api-python-client
+fastapi
+uvicorn
+python-dotenv
+psycopg2
+python-dotenv
+credentials.json
+supabase

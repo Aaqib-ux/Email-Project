@@ -1,0 +1,33 @@
+# Environment variables and secrets
+.env
+*.env
+credentials.json
+token.pickle
+
+# Virtual Environments
+.venv/
+env/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Logs and system files
+*.log
+.DS_Store
+
+#ignore database files
+*.db
+*.sql
+*.sqlite
