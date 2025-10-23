@@ -13,7 +13,9 @@ logger = logging.getLogger(__name__)
 
 class EmailDatabase:
     def __init__(self):
+
         # Database connection parameters
+
         self.db_config = {
             "host": os.getenv("DB_HOST", "localhost"),
             "database": os.getenv("DB_NAME", "postgres"),

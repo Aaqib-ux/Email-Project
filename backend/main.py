@@ -25,23 +25,34 @@ class UserAuth(BaseModel):
 @app.post("/auth/signup")
 def signup(user_data: UserAuth):
     try:
+        # supabase auth signup
         response = supabase.auth.sign_up(
             {"email": user_data.email, "password": user_data.password}
         )
+
+        # create user in your Database too
+
+        if response.user:
+            db_user_id = db.create_user(email=response.user.email, google_user_id=None)
 
         if response.user and not response.user.confirmed_at:
             return {
                 "message": "Signup successful, please confirm your email",
                 "user": {
                     "id": response.user.id,
-                    "email": False,
+                    "db_user_id": db_user_id,
+                    "email": response.user.email,
                     "confirmation_required": True,
                 },
             }
         else:
             return {
                 "message": "Signup successful",
-                "user": response.user,
+                "user": {
+                    "id": response.user.id,
+                    "db_user_id": db_user_id,
+                    "email": response.user.email,
+                },
                 "email_confirmed": True,
             }
 
@@ -61,15 +72,19 @@ def signup(user_data: UserAuth):
 
 @app.post("/auth/login")
 def login(user_data: UserAuth):
+
     try:
         response = supabase.auth.sign_in_with_password(
             {"email": user_data.email, "password": user_data.password}
         )
 
         user = response.user
+
+        db.user.id = db.create_connection(email=user.email)
+
         return {
             "message": "Login successful",
-            "user": {"id": user.id, "email": user.email},
+            "user": {"id": user.id, "db_user_id": db.user.id, "email": user.email},
         }
 
     except Exception as e:
@@ -99,9 +114,10 @@ async def gmail_callback(code: str, state: str):
     service = gmail_service.build_service(credentials)
     profile = gmail_service.get_user_profile(service)
     user_email = profile.get("emailAddress")
+    google_user_id = profile.get("id")
 
     # Store credentials
-    user_id = db.create_user(user_email)
+    user_id = db.create_user(user_email, google_user_id=google_user_id)
     credentials_dict = gmail_service.credentials_to_dict(credentials)
     db.save_user_credentials(user_id, credentials_dict)
 
