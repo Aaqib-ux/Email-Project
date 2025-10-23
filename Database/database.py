@@ -17,11 +17,11 @@ class EmailDatabase:
         # Database connection parameters
 
         self.db_config = {
-            "host": os.getenv("DB_HOST", "localhost"),
-            "database": os.getenv("DB_NAME", "postgres"),
-            "user": os.getenv("DB_USER", "postgres"),
-            "password": os.getenv("DB_PASSWORD", "aaqib12345"),
-            "port": os.getenv("DB_PORT", "5432"),
+            "host": os.getenv("SUPABASE_DB_HOST"),
+            "database": os.getenv("SUPABASE_DB_NAME", "postgres"),
+            "user": os.getenv("SUPABASE_DB_USER", "postgres"),
+            "password": os.getenv("SUPABASE_DB_PASSWORD"),
+            "port": os.getenv("SUPABASE_DB_PORT", "5432"),
             "sslmode": "require",
         }
 
